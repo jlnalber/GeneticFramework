@@ -161,11 +161,21 @@ namespace GeneticFramework
 
         public static T[] RemoveFromArray<T>(T[] arr, T element)
         {
-            return RemoveFromArray(arr, IndexOf(arr, element));
+            int index = IndexOf(arr, element);
+            if (index == -1)
+            {
+                throw new IndexOutOfRangeException();
+            }
+            return RemoveFromArray(arr, index);
         }
 
         public static T[] RemoveFromArray<T>(T[] arr, int position)
         {
+            if (0 > position || position >= arr.Length)
+            {
+                throw new IndexOutOfRangeException();
+            }
+
             T[] newArr = new T[arr.Length - 1];
             for (int i = 0; i < newArr.Length; i++)
             {
