@@ -158,5 +158,27 @@ namespace GeneticFramework
             newArr[arr.Length] = element;
             return newArr;
         }
+
+        public static T[] RemoveFromArray<T>(T[] arr, T element)
+        {
+            return RemoveFromArray(arr, IndexOf(arr, element));
+        }
+
+        public static T[] RemoveFromArray<T>(T[] arr, int position)
+        {
+            T[] newArr = new T[arr.Length - 1];
+            for (int i = 0; i < newArr.Length; i++)
+            {
+                if (i < position)
+                {
+                    newArr[i] = arr[i];
+                }
+                else if (i > position)
+                {
+                    newArr[i] = arr[i + 1];
+                }
+            }
+            return newArr;
+        }
     }
 }
