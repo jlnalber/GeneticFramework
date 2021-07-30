@@ -93,7 +93,7 @@ namespace GeneticFramework
 
                 (T, double) highest = Utils.GetBest(scores, ((T, double) tupel) => tupel.Item2);
 
-                if (highest.Item2 > best.Item2)
+                if (highest.Item2 > best.Item2 && !(this.ExtraCondition(highest.Item1) ^ this.ExtraCondition(best.Item1)))
                 {
                     best = highest;
                 }

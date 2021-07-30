@@ -143,7 +143,10 @@ namespace GeneticFramework
         {
             for (int i = 0; i < arr.Length; i++)
             {
-                if (arr[i].Equals(element)) return i;
+                if (arr[i].Equals(element))
+                {
+                    return i;
+                }
             }
             return -1;
         }
@@ -177,7 +180,7 @@ namespace GeneticFramework
             }
 
             T[] newArr = new T[arr.Length - 1];
-            for (int i = 0; i < newArr.Length; i++)
+            for (int i = 0; i < arr.Length; i++)
             {
                 if (i < position)
                 {
@@ -185,7 +188,7 @@ namespace GeneticFramework
                 }
                 else if (i > position)
                 {
-                    newArr[i] = arr[i + 1];
+                    newArr[i - 1] = arr[i];
                 }
             }
             return newArr;
