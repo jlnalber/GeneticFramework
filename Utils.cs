@@ -147,5 +147,16 @@ namespace GeneticFramework
             }
             return -1;
         }
+
+        public static T[] AddToArray<T>(T[] arr, T element)
+        {
+            T[] newArr = new T[arr.Length + 1];
+            for (int i = 0; i < arr.Length; i++)
+            {
+                newArr[i] = arr[i];
+            }
+            newArr[arr.Length] = element;
+            return newArr;
+        }
     }
 }
