@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace GeneticFramework 
 {
-    static class Utils
+    public static class Utils
     {
         public static double Sum(double[] list)
         {
@@ -137,6 +137,15 @@ namespace GeneticFramework
             }
 
             return best;
+        }
+
+        public static int IndexOf<T>(T[] arr, T element)
+        {
+            for (int i = 0; i < arr.Length; i++)
+            {
+                if (arr[i].Equals(element)) return i;
+            }
+            return -1;
         }
     }
 }
