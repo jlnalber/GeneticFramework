@@ -11,6 +11,7 @@ namespace GeneticFramework
         public double CrossoverChance;
         public SelectionTypeEnum SelectionType;
         public Func<T, bool> ExtraCondition;
+        public Action<int, T[], (T, double)> ForEachGeneration; 
 
         public enum SelectionTypeEnum
         {
@@ -26,6 +27,7 @@ namespace GeneticFramework
             this.CrossoverChance = crossoverChance;
             this.SelectionType = selectionType;
             this.ExtraCondition = (T _) => true;
+            this.ForEachGeneration = (int _, T[] _, (T, double) _) => { };
         }
 
         private void ReproduceAndReplace((T, double)[] scores)
@@ -97,6 +99,8 @@ namespace GeneticFramework
                 {
                     best = highest;
                 }
+
+                ForEachGeneration(generation, this.Population, best);
             }
 
             return best.Item1;
