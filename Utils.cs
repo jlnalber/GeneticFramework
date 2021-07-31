@@ -139,6 +139,19 @@ namespace GeneticFramework
             return best;
         }
 
+        public static T GetBest<T>(T[] arr, Func<T, double> func, Func<T, bool> cond)
+        {
+            T[] newArr = Filter(arr, cond);
+            if (newArr.Length == 0)
+            {
+                return GetBest(arr, func);
+            }
+            else
+            {
+                return GetBest(newArr, func);
+            }
+        }
+
         public static int IndexOf<T>(T[] arr, T element)
         {
             for (int i = 0; i < arr.Length; i++)
