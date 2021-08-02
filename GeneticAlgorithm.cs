@@ -95,14 +95,14 @@ namespace GeneticFramework
                 await Task.Run(() => this.Mutate());
 
                 (T, double) highest = Utils.GetBest(scores, ((T, double) tupel) => tupel.Item2, ((T, double) tupel) => this.ExtraCondition(tupel.Item1));
-                bool extraHighest = this.ExtraCondition(highest.Item1);
-                bool extraBest = this.ExtraCondition(best.Item1);
+                bool extraHighest = await Task.Run(() => this.ExtraCondition(highest.Item1));
+                bool extraBest = await Task.Run(() => this.ExtraCondition(best.Item1));
                 if ((highest.Item2 > best.Item2 && !(extraHighest ^ extraBest)) || (extraHighest && !extraBest))
                 {
                     best = highest;
                 }
 
-                ForEachGeneration(generation, this.Population, best);
+                this.ForEachGeneration(generation, this.Population, best);
             }
 
             return best.Item1;

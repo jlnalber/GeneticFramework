@@ -74,7 +74,7 @@ namespace GeneticFramework
             return elements;
         }
 
-        public static T[] NElements<T>(T[] arr, int n)
+        public static T[] NElements<T>(this T[] arr, int n)
         {
             if (n > arr.Length) throw new IndexOutOfRangeException();
 
@@ -108,7 +108,7 @@ namespace GeneticFramework
             return finalArr;
         }
 
-        public static T[] Filter<T>(T[] arr, Func<T, bool> func)
+        public static T[] Filter<T>(this T[] arr, Func<T, bool> func)
         {
             List<T> list = new();
             foreach (T i in arr)
@@ -121,7 +121,7 @@ namespace GeneticFramework
             return list.ToArray();
         }
 
-        public static T GetBest<T>(T[] arr, Func<T, double> func)
+        public static T GetBest<T>(this T[] arr, Func<T, double> func)
         {
             T best = arr[0];
             double bestScore = func(best);
@@ -139,7 +139,7 @@ namespace GeneticFramework
             return best;
         }
 
-        public static T GetBest<T>(T[] arr, Func<T, double> func, Func<T, bool> cond)
+        public static T GetBest<T>(this T[] arr, Func<T, double> func, Func<T, bool> cond)
         {
             T[] newArr = Filter(arr, cond);
             if (newArr.Length == 0)
@@ -152,7 +152,7 @@ namespace GeneticFramework
             }
         }
 
-        public static int IndexOf<T>(T[] arr, T element)
+        public static int IndexOf<T>(this T[] arr, T element)
         {
             for (int i = 0; i < arr.Length; i++)
             {
@@ -164,7 +164,7 @@ namespace GeneticFramework
             return -1;
         }
 
-        public static T[] AddToArray<T>(T[] arr, T element)
+        public static T[] AddToArray<T>(this T[] arr, T element)
         {
             T[] newArr = new T[arr.Length + 1];
             for (int i = 0; i < arr.Length; i++)
@@ -175,7 +175,7 @@ namespace GeneticFramework
             return newArr;
         }
 
-        public static T[] RemoveFromArray<T>(T[] arr, T element)
+        public static T[] RemoveFromArray<T>(this T[] arr, T element)
         {
             int index = IndexOf(arr, element);
             if (index == -1)
@@ -185,7 +185,7 @@ namespace GeneticFramework
             return RemoveFromArray(arr, index);
         }
 
-        public static T[] RemoveFromArray<T>(T[] arr, int position)
+        public static T[] RemoveFromArray<T>(this T[] arr, int position)
         {
             if (0 > position || position >= arr.Length)
             {
@@ -205,6 +205,83 @@ namespace GeneticFramework
                 }
             }
             return newArr;
+        }
+
+        public static T[] Modify<T>(this T[] arr, Func<T, T> func)
+        {
+            for (int i = 0; i < arr.Length; i++)
+            {
+                arr[i] = func(arr[i]);
+            }
+            return arr;
+        }
+
+        public static int Sum<T>(IEnumerable<T> arr, Func<T, int> func)
+        {
+            int sum = 0;
+            foreach (T i in arr)
+            {
+                sum += func(i);
+            }
+            return sum;
+        }
+
+        public static double Sum<T>(IEnumerable<T> arr, Func<T, double> func)
+        {
+            double sum = 0.0;
+            foreach (T i in arr)
+            {
+                sum += func(i);
+            }
+            return sum;
+        }
+
+        public static int Average(IEnumerable<int> arr)
+        {
+            int count = 0;
+            int sum = 0;
+            foreach (int i in arr)
+            {
+                sum += i;
+                count++;
+            }
+            if (count == 0)
+            {
+                return 0;
+            }
+            return sum / count;
+        }
+
+        public static double Average(IEnumerable<double> arr)
+        {
+            int count = 0;
+            double sum = 0.0;
+            foreach (double i in arr)
+            {
+                sum += i;
+                count++;
+            }
+            if (count == 0)
+            {
+                return 0.0;
+            }
+            return sum / count;
+        }
+
+        public static double Average<T>(IEnumerable<T> arr, Func<T, double> func)
+        {
+            int count = 0;
+            double sum = 0.0;
+            foreach (T i in arr)
+            {
+                sum += func(i);
+                count++;
+            }
+            if (count == 0)
+            {
+                return 0.0;
+            }
+            return sum / count;
         }
     }
 }
