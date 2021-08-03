@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GeneticFramework 
 {
@@ -282,6 +283,37 @@ namespace GeneticFramework
                 return 0.0;
             }
             return sum / count;
+        }
+
+        public static bool Contains<T>(this T[] arr, Func<T, bool> func)
+        {
+            foreach (T i in arr)
+            {
+                if (func(i))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static T FirstOrDefault<T>(this IEnumerable<T> arr, T defaultVal)
+        {
+            if (arr.Count() == 0)
+            {
+                return defaultVal;
+            }
+            return arr.First();
+        }
+
+        public static T2[] Transform<T1, T2>(this T1[] arr, Func<T1, T2> func)
+        {
+            T2[] newArr = new T2[arr.Length];
+            for (int i = 0; i < arr.Length; i++)
+            {
+                newArr[i] = func(arr[i]);
+            }
+            return newArr;
         }
     }
 }
