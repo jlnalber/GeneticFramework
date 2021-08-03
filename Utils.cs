@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GeneticFramework 
+namespace GeneticFramework
 {
     public static class Utils
     {
@@ -45,7 +45,7 @@ namespace GeneticFramework
 
             double[] newVals = new double[arr.Length];
 
-            double sum = Sum<T> (arr);
+            double sum = Sum<T>(arr);
 
             for (int i = 0; i < newVals.Length; i++)
             {
@@ -56,9 +56,9 @@ namespace GeneticFramework
             double rn = random.NextDouble();
 
             int index = 0;
-            for (double temp = newVals[0]; temp <= rn; index++, temp += newVals[index]);
+            for (double temp = newVals[0]; temp <= rn; index++, temp += newVals[index]) ;
 
-            return arr[index] switch { (T t, _) => t }; 
+            return arr[index] switch { (T t, _) => t };
         }
 
         public static T[] Choices<T>((T, double)[] arr, int n)
@@ -99,13 +99,13 @@ namespace GeneticFramework
                 helper[i] = func(arr[i]);
             }
             Array.Sort(helper, arr);
-            
+
             T[] finalArr = new T[n];
             for (int i = 0; i < n; i++)
             {
                 finalArr[i] = arr[arr.Length - i - 1];
             }
-            
+
             return finalArr;
         }
 
@@ -325,8 +325,9 @@ namespace GeneticFramework
                 {
                     if (newArr[j].Item2 > newArr[j + 1].Item2)
                     {
+                        (T, double) temp = newArr[j];
                         newArr[j] = newArr[j + 1];
-                        newArr[j + 1] = newArr[j];
+                        newArr[j + 1] = temp;
                     }
                 }
             }
@@ -338,18 +339,14 @@ namespace GeneticFramework
         {
             Random random = new();
 
-            (T, double)[] newArr = new (T, double)[arr.Length];
-            for (int i = 0; i < arr.Length; i++)
-            {
-                newArr[i] = (arr[i], random.NextDouble());
-            }
+            (T, double)[] newArr = (from i in arr select (i, random.NextDouble())).ToArray();
 
             return Sort(newArr).Transform(((T, double) tupel) => tupel.Item1);
         }
 
         public static (T1, T2)[] ShuffleTupels<T1, T2>((T1, T2)[] arr)
         {
-            T2[] t2s = new T2[arr.Length];
+            T2[] t2s = (from i in arr select i.Item2).ToArray();
             T2[] t2sShuffled = t2s.Shuffle();
 
             (T1, T2)[] newArr = new (T1, T2)[arr.Length];
