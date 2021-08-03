@@ -315,5 +315,50 @@ namespace GeneticFramework
             }
             return newArr;
         }
+
+        public static (T, double)[] Sort<T>((T, double)[] arr)
+        {
+            (T, double)[] newArr = arr.Transform(((T, double) tupel) => tupel);
+            for (int i = 0; i < newArr.Length; i++)
+            {
+                for (int j = 0; j < newArr.Length - i - 1; j++)
+                {
+                    if (newArr[j].Item2 > newArr[j + 1].Item2)
+                    {
+                        newArr[j] = newArr[j + 1];
+                        newArr[j + 1] = newArr[j];
+                    }
+                }
+            }
+
+            return newArr;
+        }
+
+        public static T[] Shuffle<T>(this T[] arr)
+        {
+            Random random = new();
+
+            (T, double)[] newArr = new (T, double)[arr.Length];
+            for (int i = 0; i < arr.Length; i++)
+            {
+                newArr[i] = (arr[i], random.NextDouble());
+            }
+
+            return Sort(newArr).Transform(((T, double) tupel) => tupel.Item1);
+        }
+
+        public static (T1, T2)[] SchuffleTupels<T1, T2>((T1, T2)[] arr)
+        {
+            T2[] t2s = new T2[arr.Length];
+            T2[] t2sShuffled = t2s.Shuffle();
+
+            (T1, T2)[] newArr = new (T1, T2)[arr.Length];
+            for (int i = 0; i < newArr.Length; i++)
+            {
+                newArr[i] = (arr[i].Item1, t2sShuffled[i]);
+            }
+
+            return newArr;
+        }
     }
 }
