@@ -347,7 +347,7 @@ namespace GeneticFramework
             return Sort(newArr).Transform(((T, double) tupel) => tupel.Item1);
         }
 
-        public static (T1, T2)[] SchuffleTupels<T1, T2>((T1, T2)[] arr)
+        public static (T1, T2)[] ShuffleTupels<T1, T2>((T1, T2)[] arr)
         {
             T2[] t2s = new T2[arr.Length];
             T2[] t2sShuffled = t2s.Shuffle();
