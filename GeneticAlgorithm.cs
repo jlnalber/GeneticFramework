@@ -12,7 +12,8 @@ namespace GeneticFramework
         public double CrossoverChance;
         public SelectionTypeEnum SelectionType;
         public Func<T, bool> ExtraCondition;
-        public Action<int, T[], (T, double)> ForEachGeneration; 
+        public Action<int, T[], (T, double)> ForEachGeneration;
+        private (T, double) Best;
 
         public enum SelectionTypeEnum
         {
@@ -31,7 +32,7 @@ namespace GeneticFramework
             this.ForEachGeneration = (int _, T[] _, (T, double) _) => { };
         }
 
-        private void ReproduceAndReplace((T, double)[] scores)
+        private void ReproduceAndReplace((T, double)[] scores, bool useBest = true)
         {
             Random random = new();
             T[] newPopulation = new T[this.Population.Length];
@@ -41,8 +42,8 @@ namespace GeneticFramework
                 (T, T) parents = (null, null);
                 switch (this.SelectionType)
                 {
-                    case SelectionTypeEnum.Roulette: parents = PickRoulette(scores); break;
-                    case SelectionTypeEnum.Tournament: parents = PickTournament(scores, this.Population.Length / 2); break;
+                    case SelectionTypeEnum.Roulette: parents = PickRoulette(useBest ? scores.AddToArray(this.Best) : scores); break;
+                    case SelectionTypeEnum.Tournament: parents = PickTournament(useBest ? scores.AddToArray(this.Best) : scores, this.Population.Length / 2); break;
                 }
 
                 if (random.NextDouble() < this.CrossoverChance)
@@ -81,13 +82,13 @@ namespace GeneticFramework
         public async Task<T> RunAsync()
         {
             (T, double)[] scores = this.GetScores();
-            (T, double) best = Utils.GetBest(scores, ((T, double) tupel) => tupel.Item2, ((T, double) tupel) => this.ExtraCondition(tupel.Item1));
+            this.Best = Utils.GetBest(scores, ((T, double) tupel) => tupel.Item2, ((T, double) tupel) => this.ExtraCondition(tupel.Item1));
 
             for (int generation = 0; generation < this.MaxGenerations; generation++)
             {
-                if (best.Item2 >= this.Threshold && this.ExtraCondition(best.Item1))
+                if (this.Best.Item2 >= this.Threshold && this.ExtraCondition(this.Best.Item1))
                 {
-                    return best.Item1;
+                    return this.Best.Item1;
                 }
                 
                 scores = this.GetScores();
@@ -96,16 +97,16 @@ namespace GeneticFramework
 
                 (T, double) highest = Utils.GetBest(scores, ((T, double) tupel) => tupel.Item2, ((T, double) tupel) => this.ExtraCondition(tupel.Item1));
                 bool extraHighest = await Task.Run(() => this.ExtraCondition(highest.Item1));
-                bool extraBest = await Task.Run(() => this.ExtraCondition(best.Item1));
-                if ((highest.Item2 > best.Item2 && !(extraHighest ^ extraBest)) || (extraHighest && !extraBest))
+                bool extraBest = await Task.Run(() => this.ExtraCondition(this.Best.Item1));
+                if ((highest.Item2 > this.Best.Item2 && !(extraHighest ^ extraBest)) || (extraHighest && !extraBest))
                 {
-                    best = highest;
+                    this.Best = highest;
                 }
 
-                this.ForEachGeneration(generation, this.Population, best);
+                this.ForEachGeneration(generation, this.Population, this.Best);
             }
 
-            return best.Item1;
+            return this.Best.Item1;
         }
 
         private static (T, T) PickRoulette((T, double)[] wheel)
