@@ -42,8 +42,8 @@ namespace GeneticFramework
                 (T, T) parents = (null, null);
                 switch (this.SelectionType)
                 {
-                    case SelectionTypeEnum.Roulette: parents = PickRoulette(useBest ? scores.AddToArray(this.Best) : scores); break;
-                    case SelectionTypeEnum.Tournament: parents = PickTournament(useBest ? scores.AddToArray(this.Best) : scores, this.Population.Length / 2); break;
+                    case SelectionTypeEnum.Roulette: parents = PickRoulette(useBest ? scores.AddToArray((this.Best.Item1, this.Best.Item2 * 2.0)) : scores); break;
+                    case SelectionTypeEnum.Tournament: parents = PickTournament(useBest ? scores.AddToArray((this.Best.Item1, this.Best.Item2 * 2.0)) : scores, this.Population.Length / 2); break;
                 }
 
                 if (random.NextDouble() < this.CrossoverChance)
