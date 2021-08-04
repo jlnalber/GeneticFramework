@@ -90,7 +90,7 @@ namespace GeneticFramework
                 {
                     return this.Best.Item1;
                 }
-                
+
                 scores = this.GetScores();
                 await Task.Run(() => this.ReproduceAndReplace(scores));
                 await Task.Run(() => this.Mutate());
@@ -108,13 +108,13 @@ namespace GeneticFramework
 
             return this.Best.Item1;
         }
-
+        
         private static (T, T) PickRoulette((T, double)[] wheel)
         {
             T[] arr = Utils.Choices(wheel, 2);
             return (arr[0], arr[1]);
         }
-    
+
         private static (T, T) PickTournament((T, double)[] tupels, int participants)
         {
             (T, double)[] arr = Utils.NElements(tupels, participants);
@@ -135,3 +135,4 @@ namespace GeneticFramework
         }
     }
 }
+*

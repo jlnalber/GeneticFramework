@@ -153,6 +153,49 @@ namespace GeneticFramework
             }
         }
 
+        public static T[] GetBest<T>(this T[] arr, Func<T, double> func, Func<T, bool> cond, int n)
+        {
+            T[] newArr = new T[arr.Length];
+            arr.CopyTo(newArr, 0);
+            newArr.Sort(func);
+            newArr.Sort((T t) => cond(t) ? 1 : 0);
+            return newArr.GetRange(newArr.Length - n, newArr.Length);
+        }
+
+        public static void Insert<T>(this T[] arr, T element, int index)
+        {
+            T toInsert = element;
+            for (int i = index; i >= 0; i--)
+            {
+                T temp = arr[i];
+                arr[i] = toInsert;
+                toInsert = temp;
+            }
+        }
+
+        public static void Mix<T>(this T[] arr, T[] otherArr, Func<T, T, bool> func)
+        {
+            foreach (T i in otherArr)
+            {
+                int index = -1;
+                for (; index + 1 < arr.Length && func(i, arr[index + 1]); index++) ;
+                if (index != -1)
+                {
+                    arr.Insert(i, index);
+                }
+            }
+        }
+
+        public static T[] GetRange<T>(this T[] arr, int start, int end)
+        {
+            T[] newArr = new T[end - start];
+            for (int i = 0; i < end - start; i++)
+            {
+                newArr[i] = arr[i + start];
+            }
+            return newArr;
+        }
+
         public static int IndexOf<T>(this T[] arr, T element)
         {
             for (int i = 0; i < arr.Length; i++)
@@ -347,6 +390,42 @@ namespace GeneticFramework
             }
 
             return newArr;
+        }
+
+        public static T[] Sort<T>(this T[] arr, Func<T, double> func)
+        {
+            for (int i = 0; i < arr.Length; i++)
+            {
+                for (int j = 0; j < arr.Length - i - 1; j++)
+                {
+                    if (func(arr[j]) > func(arr[j + 1]))
+                    {
+                        T temp = arr[j];
+                        arr[j] = arr[j + 1];
+                        arr[j + 1] = temp;
+                    }
+                }
+            }
+
+            return arr;
+        }
+
+        public static T[] Sort<T>(this T[] arr, Func<T, int> func)
+        {
+            for (int i = 0; i < arr.Length; i++)
+            {
+                for (int j = 0; j < arr.Length - i - 1; j++)
+                {
+                    if (func(arr[j]) > func(arr[j + 1]))
+                    {
+                        T temp = arr[j];
+                        arr[j] = arr[j + 1];
+                        arr[j + 1] = temp;
+                    }
+                }
+            }
+
+            return arr;
         }
 
         public static T[] Shuffle<T>(this T[] arr)
