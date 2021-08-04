@@ -176,6 +176,20 @@ namespace GeneticFramework
             return newArr;
         }
 
+        public static T[] AddToArray<T>(this T[] arr, T[] ts)
+        {
+            T[] newArr = new T[arr.Length + ts.Length];
+            for (int i = 0; i < arr.Length; i++)
+            {
+                newArr[i] = arr[i];
+            }
+            for (int i = 0; i < ts.Length; i++)
+            {
+                newArr[arr.Length + i] = ts[i];
+            }
+            return newArr;
+        }
+
         public static T[] RemoveFromArray<T>(this T[] arr, T element)
         {
             int index = IndexOf(arr, element);
