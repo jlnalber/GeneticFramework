@@ -81,8 +81,8 @@ namespace GeneticFramework
 
         public async Task<T> RunAsync()
         {
-            (T, double)[] scores = this.GetScores();
-            this.Best = Utils.GetBest(scores, ((T, double) tupel) => tupel.Item2, ((T, double) tupel) => this.ExtraCondition(tupel.Item1));
+            (T, double)[] scores = await Task.Run(() => this.GetScores());
+            this.Best = await Task.Run(() => Utils.GetBest(scores, ((T, double) tupel) => tupel.Item2, ((T, double) tupel) => this.ExtraCondition(tupel.Item1)));
 
             for (int generation = 0; generation < this.MaxGenerations; generation++)
             {
@@ -91,11 +91,11 @@ namespace GeneticFramework
                     return this.Best.Item1;
                 }
 
-                scores = this.GetScores();
+                scores = await Task.Run(() => this.GetScores());
                 await Task.Run(() => this.ReproduceAndReplace(scores));
                 await Task.Run(() => this.Mutate());
 
-                (T, double) highest = Utils.GetBest(scores, ((T, double) tupel) => tupel.Item2, ((T, double) tupel) => this.ExtraCondition(tupel.Item1));
+                (T, double) highest = await Task.Run(() => Utils.GetBest(scores, ((T, double) tupel) => tupel.Item2, ((T, double) tupel) => this.ExtraCondition(tupel.Item1)));
                 bool extraHighest = await Task.Run(() => this.ExtraCondition(highest.Item1));
                 bool extraBest = await Task.Run(() => this.ExtraCondition(this.Best.Item1));
                 if ((highest.Item2 > this.Best.Item2 && !(extraHighest ^ extraBest)) || (extraHighest && !extraBest))
