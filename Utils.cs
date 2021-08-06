@@ -49,7 +49,7 @@ namespace GeneticFramework
 
             for (int i = 0; i < newVals.Length; i++)
             {
-                newVals[i] = arr[i].Item2 / sum;
+                newVals[i] = arr[i].Item2 / (double)sum;
             }
 
             Random random = new Random();
@@ -58,7 +58,7 @@ namespace GeneticFramework
             int index = 0;
             for (double temp = newVals[0]; temp <= rn; index++, temp += newVals[index]) ;
 
-            return arr[index] switch { (T t, _) => t };
+            return arr[index].Item1;
         }
 
         public static T[] Choices<T>((T, double)[] arr, int n)

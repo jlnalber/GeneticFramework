@@ -14,6 +14,7 @@ namespace GeneticFramework
         public Func<T, bool> ExtraCondition;
         public Action<int, T[], (T, double)> ForEachGeneration;
         private (T, double) Best;
+        public bool UseBest;
 
         public enum SelectionTypeEnum
         {
@@ -30,9 +31,10 @@ namespace GeneticFramework
             this.SelectionType = selectionType;
             this.ExtraCondition = (T _) => true;
             this.ForEachGeneration = (int _, T[] _, (T, double) _) => { };
+            this.UseBest = false;
         }
 
-        private void ReproduceAndReplace((T, double)[] scores, bool useBest = true)
+        private void ReproduceAndReplace((T, double)[] scores)
         {
             Random random = new();
             T[] newPopulation = new T[this.Population.Length];
@@ -42,8 +44,8 @@ namespace GeneticFramework
                 (T, T) parents = (null, null);
                 switch (this.SelectionType)
                 {
-                    case SelectionTypeEnum.Roulette: parents = PickRoulette(useBest ? scores.AddToArray((this.Best.Item1, this.Best.Item2 * 2.0)) : scores); break;
-                    case SelectionTypeEnum.Tournament: parents = PickTournament(useBest ? scores.AddToArray((this.Best.Item1, this.Best.Item2 * 2.0)) : scores, this.Population.Length / 2); break;
+                    case SelectionTypeEnum.Roulette: parents = PickRoulette(this.UseBest ? scores.AddToArray((this.Best.Item1, this.Best.Item2)) : scores); break;
+                    case SelectionTypeEnum.Tournament: parents = PickTournament(this.UseBest ? scores.AddToArray((this.Best.Item1, this.Best.Item2)) : scores, this.Population.Length / 2); break;
                 }
 
                 if (random.NextDouble() < this.CrossoverChance)
