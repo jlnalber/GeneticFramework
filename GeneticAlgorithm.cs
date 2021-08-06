@@ -113,15 +113,14 @@ namespace GeneticFramework
         
         private static (T, T) PickRoulette((T, double)[] wheel)
         {
-            T[] arr = Utils.Choices(wheel, 2);
+            T[] arr = Utils.PickRoulette(wheel, 2);
             return (arr[0], arr[1]);
         }
 
         private static (T, T) PickTournament((T, double)[] tupels, int participants)
         {
-            (T, double)[] arr = Utils.NElements(tupels, participants);
-            (T, double)[] arr2 = Utils.NLargest(arr, 2, ((T, double) i) => i.Item2);
-            return (arr2[0].Item1, arr2[1].Item1);
+            T[] arr = Utils.PickTournament(tupels, participants, 2);
+            return (arr[0], arr[1]);
         }
 
         public (T, double)[] GetScores()

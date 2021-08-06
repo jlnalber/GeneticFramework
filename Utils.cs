@@ -465,5 +465,15 @@ namespace GeneticFramework
 
             return newArr;
         }
+
+        public static T[] PickRoulette<T>((T, double)[] wheel, int n)
+        {
+            return Utils.Choices(wheel, n);
+        }
+
+        public static T[] PickTournament<T>((T, double)[] tupels, int participants, int n)
+        {
+            return Utils.NLargest(Utils.NElements(tupels, participants), n, ((T, double) i) => i.Item2).Transform(((T, double) t) => t.Item1);
+        }
     }
 }
