@@ -79,13 +79,13 @@ namespace GeneticFramework
         {
             if (n > arr.Length) throw new IndexOutOfRangeException();
 
-            List<T> elements = new();
+            HashSet<T> elements = new();
             Random rnd = new();
             for (int i = 0; i < n; i++)
             {
-                T cur = arr[rnd.Next(arr.Length)];
-                elements.Add(cur);
-                arr = Filter(arr, (T t) => !t.Equals(cur));
+                int pos = rnd.Next(arr.Length);
+                for (; elements.Contains(arr[pos % arr.Length]); pos++) ;
+                elements.Add(arr[pos % arr.Length]);
             }
 
             return elements.ToArray();
@@ -471,9 +471,39 @@ namespace GeneticFramework
             return Utils.Choices(wheel, n);
         }
 
+        public static T PickRoulette<T>((T, double)[] wheel)
+        {
+            return Utils.Choices(wheel);
+        }
+
         public static T[] PickTournament<T>((T, double)[] tupels, int participants, int n)
         {
             return Utils.NLargest(Utils.NElements(tupels, participants), n, ((T, double) i) => i.Item2).Transform(((T, double) t) => t.Item1);
+        }
+
+        public static T PickTournament<T>((T, double)[] tupels, int participants)
+        {
+            return Utils.NLargest(Utils.NElements(tupels, participants), 1, ((T, double) i) => i.Item2)[0].Item1;
+        }
+
+        public static T PickTournament<T>((T, double)[] tupels)
+        {
+            return Utils.NElements(tupels, (tupels.Length + 1) / 2).Largest();
+        }
+
+        public static T Largest<T>(this (T, double)[] arr)
+        {
+            double biggest = arr[0].Item2;
+            T largest = arr[0].Item1;
+            for (int i = 1; i < arr.Length; i++)
+            {
+                if (arr[i].Item2 > biggest)
+                {
+                    biggest = arr[i].Item2;
+                    largest = arr[i].Item1;
+                }
+            }
+            return largest;
         }
     }
 }
