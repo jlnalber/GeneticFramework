@@ -110,7 +110,7 @@ namespace GeneticFramework
 
             return this.Best.Item1;
         }
-        
+
         private static (T, T) PickRoulette((T, double)[] wheel)
         {
             T[] arr = Utils.PickRoulette(wheel, 2);
