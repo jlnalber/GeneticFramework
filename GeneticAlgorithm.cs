@@ -15,6 +15,7 @@ namespace GeneticFramework
         public Action<int, T[], (T, double)> ForEachGeneration;
         private (T, double) Best;
         public bool UseBest;
+        public Func<T, double> Fitness = t => t.Fitness();
 
         public enum SelectionTypeEnum
         {
@@ -129,7 +130,7 @@ namespace GeneticFramework
 
             for (int i = 0; i < this.Population.Length; i++)
             {
-                scores[i] = (this.Population[i], this.Population[i].Fitness());
+                scores[i] = (this.Population[i], this.Fitness(this.Population[i]));
             }
 
             return scores;
