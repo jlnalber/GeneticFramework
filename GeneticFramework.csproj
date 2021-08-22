@@ -9,4 +9,10 @@
     <Optimize>false</Optimize>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Reference Include="Utils">
+      <HintPath>..\Utils\Utils\bin\Debug\net5.0\Utils.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

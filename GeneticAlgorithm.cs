@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Utils;
 
 namespace GeneticFramework
 {
@@ -85,7 +86,7 @@ namespace GeneticFramework
         public async Task<T> RunAsync()
         {
             (T, double)[] scores = await Task.Run(() => this.GetScores());
-            this.Best = await Task.Run(() => Utils.GetBest(scores, ((T, double) tupel) => tupel.Item2, ((T, double) tupel) => this.ExtraCondition(tupel.Item1)));
+            this.Best = await Task.Run(() => scores.GetBest(((T, double) tupel) => tupel.Item2, ((T, double) tupel) => this.ExtraCondition(tupel.Item1)));
 
             for (int generation = 0; generation < this.MaxGenerations; generation++)
             {
@@ -98,7 +99,7 @@ namespace GeneticFramework
                 await Task.Run(() => this.ReproduceAndReplace(scores));
                 await Task.Run(() => this.Mutate());
 
-                (T, double) highest = await Task.Run(() => Utils.GetBest(scores, ((T, double) tupel) => tupel.Item2, ((T, double) tupel) => this.ExtraCondition(tupel.Item1)));
+                (T, double) highest = await Task.Run(() => scores.GetBest(((T, double) tupel) => tupel.Item2, ((T, double) tupel) => this.ExtraCondition(tupel.Item1)));
                 bool extraHighest = await Task.Run(() => this.ExtraCondition(highest.Item1));
                 bool extraBest = await Task.Run(() => this.ExtraCondition(this.Best.Item1));
                 if ((highest.Item2 > this.Best.Item2 && !(extraHighest ^ extraBest)) || (extraHighest && !extraBest))
@@ -114,14 +115,14 @@ namespace GeneticFramework
 
         private static (T, T) PickRoulette((T, double)[] wheel)
         {
-            T[] arr = Utils.PickRoulette(wheel, 2);
-            return (arr[0], arr[1]);
+            (T, double)[] arr = RandomExt.PickRoulette(wheel, 2);
+            return (arr[0].Item1, arr[1].Item1);
         }
 
         private static (T, T) PickTournament((T, double)[] tupels, int participants)
         {
-            T[] arr = Utils.PickTournament(tupels, participants, 2);
-            return (arr[0], arr[1]);
+            (T, double)[] arr = RandomExt.PickTournament(tupels, participants, 2);
+            return (arr[0].Item1, arr[1].Item1);
         }
 
         public (T, double)[] GetScores()
